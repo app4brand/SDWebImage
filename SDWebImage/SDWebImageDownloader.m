@@ -12,6 +12,9 @@
 
 static NSString *const kProgressCallbackKey = @"progress";
 static NSString *const kCompletedCallbackKey = @"completed";
+NSString *const SDWebImageDownloadFinishedNotification = @"kImageDownloadCompleted";
+
+NSString *const kSDWebImageDataSizeField = @"dataSize";
 
 @interface SDWebImageDownloader ()
 
@@ -149,6 +152,8 @@ static NSString *const kCompletedCallbackKey = @"completed";
                                                              }
                                                          }
                                                         completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
+                                                            NSDictionary *userInfo = @{kSDWebImageDataSizeField: [NSNumber numberWithInteger:[data length]]};
+                                                            [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadFinishedNotification object:nil userInfo:userInfo];
                                                             SDWebImageDownloader *sself = wself;
                                                             if (!sself) return;
                                                             __block NSArray *callbacksForURL;
